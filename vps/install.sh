@@ -4,7 +4,7 @@
 sudo apt update
 sudo apt upgrade -y
 
-sudo apt install -y cron git htop eza ca-certificates curl wget nano fail2ban
+sudo apt install -y cron git htop eza ca-certificates curl wget nano fail2ban rclone
 
 # Install Docker
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -21,4 +21,9 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 sudo curl -fsSL https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.deb -o /tmp/fastfetch.deb
 sudo dpkg -i /tmp/fastfetch.deb
 
+# Enable and start services
 sudo systemctl enable fail2ban
+sudo systemctl enable docker
+
+sudo systemctl start fail2ban
+sudo systemctl start docker
