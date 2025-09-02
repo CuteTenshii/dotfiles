@@ -20,6 +20,7 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 # Install fastfetch
 sudo curl -fsSL https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.deb -o /tmp/fastfetch.deb
 sudo dpkg -i /tmp/fastfetch.deb
+rm /tmp/fastfetch.deb
 
 # Enable and start services
 sudo systemctl enable fail2ban
