@@ -37,6 +37,11 @@ fi
 
 VAULTWARDEN_ARCHIVE=$(echo $BACKUP_FILES | tr ' ' '\n' | grep "^vaultwarden-data")
 if [ -n "$VAULTWARDEN_ARCHIVE" ]; then
+    if [[ ! -d /opt/vaultwarden ]]; then
+        echo "Creating /opt/vaultwarden directory"
+        sudo mkdir -p /opt/vaultwarden
+    fi
+
     echo "Restoring Vaultwarden data from $VAULTWARDEN_ARCHIVE"
     rclone copyto "r2:$BUCKET_NAME/backups/$MOST_RECENT_BACKUP/$VAULTWARDEN_ARCHIVE" /tmp/$VAULTWARDEN_ARCHIVE
 
@@ -49,6 +54,11 @@ fi
 
 NPM_ARCHIVE=$(echo $BACKUP_FILES | tr ' ' '\n' | grep "^npm_backup_")
 if [ -n "$NPM_ARCHIVE" ]; then
+    if [[ ! -d /opt/npm ]]; then
+        echo "Creating /opt/npm directory"
+        sudo mkdir -p /opt/npm
+    fi
+
     echo "Restoring NPM data from $NPM_ARCHIVE"
     rclone copyto "r2:$BUCKET_NAME/backups/$MOST_RECENT_BACKUP/$NPM_ARCHIVE" /tmp/$NPM_ARCHIVE
 
