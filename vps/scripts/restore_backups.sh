@@ -3,7 +3,6 @@ BUCKET_NAME="stuff"
 
 # Find the most recent backup
 MOST_RECENT_BACKUP=$(rclone lsf "r2:$BUCKET_NAME/backups" --format "p" | sort | tail -n 1)
-echo "r2:$BUCKET_NAME/backups/$MOST_RECENT_BACKUP"
 BACKUP_FILES=$(rclone lsf "r2:$BUCKET_NAME/backups/$MOST_RECENT_BACKUP" --format "p")
 
 SQL_ARCHIVES=$(echo $BACKUP_FILES | tr ' ' '\n' | grep "\.sql\.zst$")
