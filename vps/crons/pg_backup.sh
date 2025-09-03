@@ -7,12 +7,12 @@ mkdir -p $BACKUP_DIR
 DATABASES=$(sudo docker exec -i $CONTAINER_NAME psql -U postgres -d postgres -t -c "SELECT datname FROM pg_database WHERE datistemplate = false;")
 
 for db in $DATABASES; do
-  BACKUP_FILE=${db}_backup_$TIMESTAMP.sql.gz
+  BACKUP_FILE=${db}_backup_$TIMESTAMP.sql.zst
 
   echo "Backing up database: $db"
 
-  # Dump the database and compress it
-  docker exec -t $CONTAINER_NAME pg_dump -U postgres $db | gzip > $BACKUP_DIR/$BACKUP_FILE
+  # Dump the database and compress it with zstd
+  docker exec -t $CONTAINER_NAME pg_dump -U postgres $db | zstd -T0 -19 -o $BACKUP_DIR/$BACKUP_FILE
 
   # Check for errors
   if [[ $? -ne 0 ]]; then
