@@ -4,7 +4,7 @@
 sudo apt update
 sudo apt upgrade -y
 
-sudo apt install -y cron git htop eza ca-certificates curl wget nano fail2ban rclone
+sudo apt install -y cron git htop eza ca-certificates curl wget nano fail2ban rclone sqlite3 zstd
 
 # Install Docker
 sudo install -m 0755 -d /etc/apt/keyrings
