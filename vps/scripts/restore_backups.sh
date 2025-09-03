@@ -11,7 +11,7 @@ fi
 MOST_RECENT_BACKUP=$(rclone lsf "r2:$BUCKET_NAME/backups" --format "p" | sort | tail -n 1)
 BACKUP_FILES=$(rclone lsf "r2:$BUCKET_NAME/backups/$MOST_RECENT_BACKUP" --format "p")
 
-if [ ! $ONLY_RESTORE_FILES ]; then
+if [ "$ONLY_RESTORE_FILES" != "true" ]; then
     SQL_ARCHIVES=$(echo $BACKUP_FILES | tr ' ' '\n' | grep "\.sql\.zst$")
     for SQL_ARCHIVE in $SQL_ARCHIVES; do
         echo "Restoring database from $SQL_ARCHIVE"
