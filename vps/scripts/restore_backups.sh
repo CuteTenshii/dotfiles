@@ -68,3 +68,20 @@ if [ -n "$NPM_ARCHIVE" ]; then
 
     rm -f /tmp/$NPM_ARCHIVE
 fi
+
+NPM_SSL_ARCHIVE=$(echo $BACKUP_FILES | tr ' ' '\n' | grep "^npm_ssl_backup_")
+if [ -n "$NPM_SSL_ARCHIVE" ]; then
+    if [[ ! -d /opt/ssl ]]; then
+        echo "Creating /opt/ssl directory"
+        sudo mkdir -p /opt/ssl
+    fi
+
+    echo "Restoring NPM SSL data from $NPM_SSL_ARCHIVE"
+    rclone copyto "r2:$BUCKET_NAME/backups/$MOST_RECENT_BACKUP/$NPM_SSL_ARCHIVE" /tmp/$NPM_SSL_ARCHIVE
+
+    echo "Extracting NPM SSL archive"
+    # Extract NPM SSL archive
+    tar -I zstd -xf /tmp/$NPM_SSL_ARCHIVE -C /opt/ssl
+
+    rm -f /tmp/$NPM_SSL_ARCHIVE
+fi
