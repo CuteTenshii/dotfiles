@@ -28,8 +28,8 @@ if [ -n "$VAULTWARDEN_ARCHIVE" ]; then
     rclone copyto "r2:$BUCKET_NAME/backups/$MOST_RECENT_BACKUP/$VAULTWARDEN_ARCHIVE" /tmp/$VAULTWARDEN_ARCHIVE
 
     echo "Extracting Vaultwarden archive"
-    # Extract Vaultwarden archive in /, archives already includes the /opt/vaultwarden path
-    tar -I zstd -xf /tmp/$VAULTWARDEN_ARCHIVE -C /
+    # Extract Vaultwarden archive
+    tar -I zstd -xf /tmp/$VAULTWARDEN_ARCHIVE -C /opt/vaultwarden
 
     rm -f /tmp/$VAULTWARDEN_ARCHIVE
 fi

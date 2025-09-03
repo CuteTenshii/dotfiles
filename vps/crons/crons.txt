@@ -1,2 +1,3 @@
 0 0 * * * /home/tenshii/crons/pg_backup.sh
 0 0 * * * /home/tenshii/crons/vaultwarden_backup.sh
+0 0 * * * /home/tenshii/crons/plausible_backup.sh

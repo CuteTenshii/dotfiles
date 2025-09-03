@@ -18,7 +18,7 @@ sqlite3 $DATA_DIR/db.sqlite3 ".backup '$BACKUP_DIR/vaultwarden-db-$TIMESTAMP.sql
 
 echo "Creating archive of Vaultwarden data..."
 # Create archive of entire data directory, excluding cache and temp files
-tar --exclude="$DATA_DIR/icon_cache" --exclude="$DATA_DIR/tmp" --zstd -cvf $BACKUP_DIR/vaultwarden-data-$TIMESTAMP.tar.zst $DATA_DIR/
+tar --exclude="./icon_cache" --exclude="./tmp" --zstd -cvf $BACKUP_DIR/vaultwarden-data-$TIMESTAMP.tar.zst -C $DATA_DIR .
 
 echo "Uploading backups to R2 bucket..."
 rclone copy $BACKUP_DIR/vaultwarden-data-$TIMESTAMP.tar.zst r2:$BUCKET_NAME/backups/$TIMESTAMP
