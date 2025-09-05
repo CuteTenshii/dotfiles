@@ -6,7 +6,7 @@ while true; do
   TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
 
   # Capture stats once per loop
-  docker stats --no-stream --format "{{.Name}} {{.BlockIO}}" | while read line; do
+  sudo docker stats --no-stream --format "{{.Name}} {{.BlockIO}}" | while read line; do
     NAME=$(echo $line | awk '{print $1}')
     READWRITE=$(echo $line | awk '{print $2}')
     READ=$(echo $READWRITE | cut -d'/' -f1 | tr -d '[:alpha:]')
