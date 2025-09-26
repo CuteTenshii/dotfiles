@@ -1,6 +1,8 @@
 # dotfiles
 random scripts and stuff
 
+![](desktop.png)
+
 ## What is there?
 
 ### .config
