@@ -6,6 +6,19 @@ BUCKET_NAME=stuff
 mkdir -p $BACKUP_DIR
 DATABASES=$(sudo docker exec -i $CONTAINER_NAME psql -U postgres -d postgres -t -c "SELECT datname FROM pg_database WHERE datistemplate = false;")
 
+# Check if heartbeat_url.txt exists and read the URL
+HEARTBEAT_FILE="$HOME/heartbeat_url.txt"
+if [[ -f "$HEARTBEAT_FILE" ]]; then
+  HEARTBEAT_URL=$(cat "$HEARTBEAT_FILE")
+fi
+
+function send_heartbeat {
+  exit_code=$?
+  if [[ -n "$HEARTBEAT_URL" ]]; then
+    curl -fsS --retry 3 "$HEARTBEAT_URL/$exit_code" > /dev/null
+  fi
+}
+
 for db in $DATABASES; do
   # Ignore template database
   if [[ $db == "postgres" ]]; then
@@ -20,6 +33,7 @@ for db in $DATABASES; do
 
   # Check for errors
   if [[ $? -ne 0 ]]; then
+    send_heartbeat
     echo "Error occurred while backing up database: $db"
     continue
   fi
@@ -31,6 +45,7 @@ for db in $DATABASES; do
 
   # Check for errors
   if [[ $? -ne 0 ]]; then
+    send_heartbeat
     echo "Error occurred while uploading backup: $BACKUP_FILE"
     continue
   fi
@@ -39,3 +54,5 @@ for db in $DATABASES; do
 done
 
 rm -rf $BACKUP_DIR
+
+send_heartbeat
