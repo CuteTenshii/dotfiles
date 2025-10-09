@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 BUCKET_NAME="stuff"
-PLAUSIBLE_DB_CONTAINER=plausible-plausible_db-1
 # this check is to see if we are only restoring files and not dbs
 ONLY_RESTORE_FILES=false
 if [[ "$1" == "true" ]]; then
@@ -24,14 +23,6 @@ if [ "$ONLY_RESTORE_FILES" != "true" ]; then
         rm -f /tmp/$SQL_ARCHIVE
 
         echo "Restoring database from $SQL_FILENAME"
-        # Restore the full database
-        if [[ $SQL_ARCHIVE == "plausible*" ]]; then
-            sudo docker exec -i $PLAUSIBLE_DB_CONTAINER psql -U postgres -c "CREATE DATABASE plausible_db;"
-            sudo docker exec -i $PLAUSIBLE_DB_CONTAINER psql -U postgres -d plausible_db < $SQL_FILENAME
-            rm -f $SQL_FILENAME
-            continue
-        fi
-
         DB_NAME=$(echo $SQL_ARCHIVE | cut -d'_' -f1)
         sudo docker exec -i db psql -U postgres -c "CREATE DATABASE $DB_NAME;"
         sudo docker exec -i db psql -U postgres -d $DB_NAME < $SQL_FILENAME
