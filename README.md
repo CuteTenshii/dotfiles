@@ -2,8 +2,9 @@
 random scripts and stuff
 
 ![](desktop.png)
+![](macos-desktop.png)
 
-## What is there?
+## What's there?
 
 ### .config
 
