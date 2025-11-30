@@ -5,11 +5,10 @@
     "height": 30, // Waybar height (to be removed for auto height)
     // "width": 1280, // Waybar width
     "spacing": 4, // Gaps between modules (4px)
+
     // Choose the order of the modules
     "modules-left": [
         "hyprland/workspaces",
-        "hyprland/submap",
-        "hyprland/scratchpad",
         "custom/media"
     ],
     "modules-center": [
@@ -17,19 +16,14 @@
     ],
     "modules-right": [
         "pulseaudio",
-        "power-profiles-daemon",
         "cpu",
         "memory",
         "tray",
         "clock",
         "custom/notification"
     ],
+
     // Modules configuration
-    "hyprland/workspaces": {
-        "disable-scroll": true,
-        "all-outputs": true,
-        "warp-on-scroll": false
-    },
     "hyprland/window": {
         "format": "{}",
         "rewrite": {
@@ -37,20 +31,12 @@
             "(.*) - Visual Studio Code": "$1",
             "Discord \\| (.*)": "$1",
             "(\\(\\d+\\) )?Discord \\| (.*)": "$1$2",
-            "(.*) - YouTube Music": "$1"
+            "(.*) - YouTube Music": "$1",
+            "(.*) - Helium": "$1"
         },
         "icon": true,
-        "icon-size": 20
-    },
-    "hyprland/submap": {
-        "format": "<span style=\"italic\">{}</span>"
-    },
-    "hyprland/scratchpad": {
-        "format": "{icon} {count}",
-        "show-empty": false,
-        "format-icons": ["", ""],
-        "tooltip": true,
-        "tooltip-format": "{app}: {title}"
+        "icon-size": 20,
+        "max-length": 125
     },
     "tray": {
         // "icon-size": 21,
@@ -68,27 +54,18 @@
         "format": " {used:0.1f}G/{total:0.1f}G ({percentage}%)",
         "tooltip": false
     },
-    "temperature": {
-        // "thermal-zone": 2,
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
-        "critical-threshold": 80,
-        // "format-critical": "{temperatureC}°C {icon}",
-        "format": "{icon} {temperatureC}°C",
-        "format-icons": ["", "", ""]
-    },
     "pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
         "format": "{icon}   {volume}% {format_source}",
-        "format-bluetooth": "{icon}   {volume}%  {format_source}",
+        "format-bluetooth": "{icon}    {volume}% {format_source}",
         "format-bluetooth-muted": "{icon}     {format_source}",
         "format-muted": " {format_source}",
-        "format-source": "  {volume}%",
-        "format-source-muted": "",
+        "format-source": "   {volume}%",
+        "format-source-muted": "",
         "format-icons": {
             "headphone": "",
             "hands-free": "",
             "headset": "",
-            "phone": "",
+            "phone": "",
             "portable": "",
             "car": "",
             "default": ["", "", ""]
@@ -97,13 +74,13 @@
         "scroll-step": 2
     },
     "custom/media": {
-        "format": "{icon} {text}",
+        "format": "{icon}  {text}",
         "return-type": "json",
         "max-length": 40,
         "format-icons": {
             "spotify": "",
             "firefox": "",
-            "default": "🎵"
+            "default": ""
         },
         "escape": true,
         "exec": "playerctl metadata --format '{ \"text\": \"{{ title }} - {{ artist }}\", \"alt\": \"{{ playerName }}\" }' 2> /dev/null",
@@ -112,15 +89,6 @@
         "tooltip": true,
         "tooltip-format": "{text}",
         "interval": 1
-    },
-    "bluetooth": {
-        // "controller": "controller1", // specify the alias of the controller if there are more than 1 on the system
-        "format": " {status}",
-        "format-disabled": "", // an empty format will hide the module
-        "format-connected": " {device_alias}",
-        "tooltip-format": "{controller_alias}\t{controller_address}",
-        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
-        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}"
     },
     "custom/notification": {
         "tooltip": false,
