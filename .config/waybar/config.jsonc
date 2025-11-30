@@ -15,6 +15,7 @@
         "hyprland/window"
     ],
     "modules-right": [
+        "custom/privacydots",
         "pulseaudio",
         "cpu",
         "memory",
@@ -110,5 +111,14 @@
         "on-click": "swaync-client -t -sw",
         "on-click-right": "swaync-client -d -sw",
         "escape": true
+    },
+    "custom/privacydots": {
+        "exec": "~/.config/waybar/scripts/privacydots.sh",
+        "return-type": "json",
+        "interval": 3,
+        "format": "{text}",
+        "tooltip": true,
+        "escape": false,
+        "markup": "pango"
     }
 }

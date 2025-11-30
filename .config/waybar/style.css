@@ -91,31 +91,17 @@ button:hover {
     background-color: #eb4d4b;
 }
 
-
-/*
-#custom-media {
-    background-color: #66cc99;
-    color: #2a5c45;
-    min-width: 100px;
+#custom-privacydots {
+  padding: 0 6px;
+  /* size of the dots */
+  font-size: 9px;
+  /* space between dots */
+  letter-spacing: 1px;
+  /* dots colored ring */
+  /* comment/uncomment to enable/disable the colored ring. */
+  /* text-shadow:
+      -1px -1px 0 #000000,
+       1px -1px 0 #000000,
+      -1px  1px 0 #000000,
+       1px  1px 0 #000000; */
 }
-
-#language {
-    background: #00b093;
-    color: #740864;
-    padding: 0 5px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state {
-    background: #97e1ad;
-    color: #000000;
-    padding: 0 0px;
-    margin: 0 5px;
-    min-width: 16px;
-}
-
-#keyboard-state > label {
-    padding: 0 5px;
-}
-*/
