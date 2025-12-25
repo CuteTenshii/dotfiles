@@ -37,5 +37,11 @@ Others keybinds are those by default.
 
 - Terminal: [kitty](https://sw.kovidgoyal.net/kitty/)
 - File Manager: [Dolphin](https://apps.kde.org/dolphin/)
-- Wallpaper: [hyprpaper](https://wiki.hypr.land/Hypr-Ecosystem/hyprpaper/), for the wallpaper itself see [wallpaper.png](wallpaper.png).
+- Wallpaper: [hyprpaper](https://wiki.hypr.land/Hypr-Ecosystem/hyprpaper/). For the wallpaper itself see [wallpaper.png](wallpaper.png).
 - Web Browser: Firefox Nightly
+- Display Manager: [SDDM](https://github.com/sddm/sddm) (theme: Breeze)
+
+## Packages to install
+
+- SDDM Breeze theme: `plasma-desktop`
+- GTK Look & Feel: `nwg-look`
