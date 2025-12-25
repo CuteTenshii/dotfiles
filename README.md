@@ -41,7 +41,9 @@ Others keybinds are those by default.
 - Web Browser: Firefox Nightly
 - Display Manager: [SDDM](https://github.com/sddm/sddm) (theme: Breeze)
 
-## Packages to install
+## Notes :)
+
+### Packages to install
 
 - SDDM Breeze theme: `plasma-desktop`
-- GTK Look & Feel: `nwg-look`
+- Themes: `nwg-look` for GTK3, `qt6ct` for Qt6
