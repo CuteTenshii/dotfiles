@@ -47,3 +47,8 @@ Others keybinds are those by default.
 
 - SDDM Breeze theme: `plasma-desktop`
 - Themes: `nwg-look` for GTK3, `qt6ct` for Qt6
+- Keyring: `kwallet5`
+
+### Things to do
+
+- VSCode keyring: https://code.visualstudio.com/docs/configure/settings-sync#_recommended-configure-the-keyring-to-use-with-vs-code
