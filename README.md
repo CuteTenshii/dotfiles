@@ -48,6 +48,7 @@ Others keybinds are those by default.
 - SDDM Breeze theme: `plasma-desktop`
 - Themes: `nwg-look` for GTK3, `qt6ct` for Qt6
 - Keyring: `kwallet5`
+- Zsh plugins: `zsh-autosuggestions`, `zsh-syntax-highlighting`
 
 ### Things to do
 
