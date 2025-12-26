@@ -54,3 +54,4 @@ Others keybinds are those by default.
 ### Things to do
 
 - VSCode keyring: https://code.visualstudio.com/docs/configure/settings-sync#_recommended-configure-the-keyring-to-use-with-vs-code
+- Fix apps list on Dolphin: `sudo ln -s /etc/xdg/menus/plasma-applications.menu /etc/xdg/menus/applications.menu`
