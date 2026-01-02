@@ -1,0 +1,8 @@
+! Stripe
+https://dashboard.stripe.com/ajax/metrics_batch
+https://t.stripe.com/
+
+! Spotify
+https://gew1-spclient.spotify.com/gabo-receiver-service/v3/events
+https://gew1-spclient.spotify.com/gabo-receiver-service/public/v3/events
+https://www.spotify.com/api/masthead/v1/masthead
