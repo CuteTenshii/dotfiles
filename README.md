@@ -49,7 +49,7 @@ Others keybinds are those by default.
 - Themes: `nwg-look` for GTK3, `qt6ct` for Qt6
 - Keyring: `kwallet5`
 - Zsh plugins: `zsh-autosuggestions`, `zsh-syntax-highlighting`
-- Screenshots: `flameshot` + `grim`
+- Screenshots: `hyprshot`
 
 ### Things to do
 
