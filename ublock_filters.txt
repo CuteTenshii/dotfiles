@@ -6,3 +6,9 @@ https://t.stripe.com/
 https://gew1-spclient.spotify.com/gabo-receiver-service/v3/events
 https://gew1-spclient.spotify.com/gabo-receiver-service/public/v3/events
 https://www.spotify.com/api/masthead/v1/masthead
+
+! Facebook
+https://www.facebook.com/ajax/bz
+
+! Meta cookies consent - uBlock doesn't block it by itself
+transparency.meta.com##.x1n2onr6.xippug5.xg6iff7.xdt5ytf.x78zum5
