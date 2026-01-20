@@ -6,11 +6,11 @@ random scripts and stuff
 
 ## What's there?
 
-### .config
+### `.config`
 
 Config files for my Arch Linux setup, which includes kitty, Hyprland, zsh, waybar.
 
-### vps
+### `vps`
 
 Scripts and crons used on my VPS. A `README.md` is included in the folder for more information.
 
@@ -40,6 +40,8 @@ Others keybinds are those by default.
 - Wallpaper: [hyprpaper](https://wiki.hypr.land/Hypr-Ecosystem/hyprpaper/). For the wallpaper itself see [wallpaper.png](wallpaper.png).
 - Web Browser: Firefox Nightly
 - Display Manager: [SDDM](https://github.com/sddm/sddm) (theme: Breeze)
+- Screenshots: [hyprshot](https://github.com/Gustash/Hyprshot)
+- API Client: [Insomnia](https://insomnia.rest/)
 
 ## Notes :)
 
@@ -55,3 +57,9 @@ Others keybinds are those by default.
 
 - VSCode keyring: https://code.visualstudio.com/docs/configure/settings-sync#_recommended-configure-the-keyring-to-use-with-vs-code
 - Fix apps list on Dolphin: `sudo ln -s /etc/xdg/menus/plasma-applications.menu /etc/xdg/menus/applications.menu`
+- Fix Dolphin emulator not having access to the Bluetooth adapter when passthough'ing it:
+  ```shell
+  sudo echo 'SUBSYSTEM=="usb", ATTRS{idVendor}=="0a12", ATTRS{idProduct}=="0001", TAG+="uaccess"' > /etc/udev/rules.d/52-dolphin.rules
+  sudo udevadm control --reload-rules
+  sudo udevadm trigger
+  ```
