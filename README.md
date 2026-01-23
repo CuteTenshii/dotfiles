@@ -63,3 +63,4 @@ Others keybinds are those by default.
   sudo udevadm control --reload-rules
   sudo udevadm trigger
   ```
+- Fix VMware Workstation closing when the mouse focuses the VM: install `libx11-mr293` [https://github.com/xkbcommon/libxkbcommon/issues/888#issuecomment-3478004721]
