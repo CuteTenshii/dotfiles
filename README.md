@@ -52,6 +52,7 @@ Others keybinds are those by default.
 - Keyring: `kwallet5`
 - Zsh plugins: `zsh-autosuggestions`, `zsh-syntax-highlighting`
 - Screenshots: `hyprshot`
+- Fonts: `apple-fonts`, `ttf-apple-emoji`
 
 ### Things to do
 
