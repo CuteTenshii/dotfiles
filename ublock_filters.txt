@@ -1,14 +1,47 @@
+[uBlock Origin]
+
+! ===== Telemetry / tracking — network =====
 ! Stripe
-https://dashboard.stripe.com/ajax/metrics_batch
-https://t.stripe.com/
+||dashboard.stripe.com/ajax/metrics_batch
+||t.stripe.com^
+||s-cdn.anthropic.com^
+||chatgpt.com/ces/v1/rgstr
+||chatgpt.com/*/intake
 
-! Spotify
-https://gew1-spclient.spotify.com/gabo-receiver-service/v3/events
-https://gew1-spclient.spotify.com/gabo-receiver-service/public/v3/events
-https://www.spotify.com/api/masthead/v1/masthead
+! Spotify — gabo = event/telemetry receiver (unanchored to catch *-spclient regional hosts)
+spclient.spotify.com/gabo-receiver-service/
+||spotify.com/api/gabo-receiver-service/
+||spotify.com/api/masthead/
 
-! Facebook
-https://www.facebook.com/ajax/bz
+! Facebook / Instagram
+||facebook.com/ajax/bz
+||facebook.com/ajax/bnzai
+||facebook.com/ajax/qm
+||instagram.com/ajax/bz
+||instagram.com/ajax/qm
+||instagram.com/error/ig_web_error_reports
 
-! Meta cookies consent - uBlock doesn't block it by itself
+! Misc beacons / error reporting
+||platform.claude.com/sentry
+||discord.com/error-reporting-proxy/
+||proxsee.pscp.tv^
+||api.x.com/*/graphql/error_log.json
+||x.com/i/api/*/graphql/error_log.json
+||guns.lol/api/telemetry
+||t.frozi.lol^
+||appleid.apple.com/appleauth/jslog
+||apis.roblox.com/beacon-api
+||apis.roblox.com/user-heartbeats-api
+
+! ===== Broad generic patterns (apply to ALL sites) =====
+/_v_script.js
+/cdn-cgi/trace
+generate_204
+
+! ===== Cosmetic (element hiding — brittle, may need re-grabbing) =====
 transparency.meta.com##.x1n2onr6.xippug5.xg6iff7.xdt5ytf.x78zum5
+www.perplexity.ai##.w-sidebarPinnedWidth
+www.perplexity.ai##.gap-sm.items-center.flex-col.flex.bg-raised.divide-subtlest.ring-subtlest.border-subtlest.border.shadow-black\/\[0\.03\].shadow-xl.rounded-2xl.mb-md.md\:flex-row.w-full.relative.md\:gap-md.p-md.group
+www.facebook.com##.x1xmf6yo.xev17xk.xpilrb4.xso031l.x1lun4ml.x178xt8z.x1t7ytsu.x1q0q8m5.x18b5jzi.x13fuv20.x15x8krk.xde0f50.x5a5i1n.x1obq294.x1nmn18.x1nb4dca.xpv9jar.x1exxf4d
+
+||abs.twimg.com/responsive-web/client-web/Chirp
