@@ -2,7 +2,6 @@
 random scripts and stuff
 
 ![](desktop.png)
-![](macos-desktop.png)
 
 ## What's there?
 
@@ -42,6 +41,7 @@ Others keybinds are those by default.
 - Display Manager: [SDDM](https://github.com/sddm/sddm) (theme: Breeze)
 - Screenshots: [hyprshot](https://github.com/Gustash/Hyprshot)
 - API Client: [Insomnia](https://insomnia.rest/)
+- Volume/brightness OSD: [swayosd](https://github.com/ErikReider/SwayOSD)
 
 ## Notes :)
 
@@ -52,7 +52,8 @@ Others keybinds are those by default.
 - Keyring: `kwallet5`
 - Zsh plugins: `zsh-autosuggestions`, `zsh-syntax-highlighting`
 - Screenshots: `hyprshot`
-- Fonts: `apple-fonts`, `ttf-apple-emoji`
+- Fonts: `apple-fonts`, `ttf-apple-emoji`, `ttf-hack-nerd`
+- Waybar icons: `otf-font-awesome`
 
 ### Things to do
 

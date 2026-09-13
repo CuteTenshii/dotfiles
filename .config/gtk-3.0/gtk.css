@@ -1,0 +1,17 @@
+/* Breeze-Dark's accent repainted to the purple used by kdeglobals and waybar.
+   The theme aliases every public color off these *_breeze definitions, so redefining
+   them here is enough; user CSS loads after the theme and wins. */
+@define-color theme_selected_bg_color_breeze #926ee4;
+@define-color theme_hovering_selected_bg_color_breeze #926ee4;
+@define-color theme_view_hover_decoration_color_breeze #926ee4;
+@define-color theme_view_active_decoration_color_breeze #926ee4;
+@define-color theme_unfocused_selected_bg_color_alt_breeze #926ee4;
+@define-color theme_button_decoration_hover_breeze #926ee4;
+@define-color theme_button_decoration_focus_breeze #926ee4;
+@define-color theme_button_decoration_hover_backdrop_breeze #926ee4;
+@define-color theme_button_decoration_focus_backdrop_breeze #926ee4;
+@define-color theme_unfocused_selected_bg_color_breeze rgba(146, 110, 228, 0.5);
+@define-color insensitive_selected_bg_color_breeze rgba(146, 110, 228, 0.35);
+@define-color insensitive_unfocused_selected_bg_color_breeze rgba(146, 110, 228, 0.35);
+
+@define-color theme_selected_bg_color #926ee4;
