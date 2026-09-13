@@ -1,7 +1,7 @@
 # dotfiles
 random scripts and stuff
 
-![](desktop.png)
+![](desktop.webp)
 
 ## What's there?
 
