@@ -1,14 +1,19 @@
 [uBlock Origin]
 
-! ===== Telemetry / tracking — network =====
+! Blocks the "Sign in with Google" popup
+||accounts.google.com/gsi/iframe/select?client_id=*.apps.googleusercontent.com
+
 ! Stripe
 ||dashboard.stripe.com/ajax/metrics_batch
 ||t.stripe.com^
+
+! ChatGPT / Claude
 ||s-cdn.anthropic.com^
+||platform.claude.com/sentry
 ||chatgpt.com/ces/v1/rgstr
 ||chatgpt.com/*/intake
 
-! Spotify — gabo = event/telemetry receiver (unanchored to catch *-spclient regional hosts)
+! Spotify gabo (event/telemetry receiver) [unanchored to catch *-spclient regional hosts]
 spclient.spotify.com/gabo-receiver-service/
 ||spotify.com/api/gabo-receiver-service/
 ||spotify.com/api/masthead/
@@ -21,27 +26,34 @@ spclient.spotify.com/gabo-receiver-service/
 ||instagram.com/ajax/qm
 ||instagram.com/error/ig_web_error_reports
 
-! Misc beacons / error reporting
-||platform.claude.com/sentry
-||discord.com/error-reporting-proxy/
-||proxsee.pscp.tv^
+! Roblox
+||apis.roblox.com/beacon-api
+||apis.roblox.com/user-heartbeats-api
+
+! Twitter
 ||api.x.com/*/graphql/error_log.json
 ||x.com/i/api/*/graphql/error_log.json
+||proxsee.pscp.tv^
+||abs.twimg.com/responsive-web/client-web/Chirp
+
+! Discord
+||discord.com/error-reporting-proxy/
+||discord.com/api/v*/science
+||discord.com/api/v*/beaker
+||discord.com/api/v*/metrics/v*
+||client-metrics.discordapp.net
+
+! Misc beacons / error reporting
 ||guns.lol/api/telemetry
 ||t.frozi.lol^
 ||appleid.apple.com/appleauth/jslog
-||apis.roblox.com/beacon-api
-||apis.roblox.com/user-heartbeats-api
 
 ! ===== Broad generic patterns (apply to ALL sites) =====
 /_v_script.js
 /cdn-cgi/trace
-generate_204
 
 ! ===== Cosmetic (element hiding — brittle, may need re-grabbing) =====
 transparency.meta.com##.x1n2onr6.xippug5.xg6iff7.xdt5ytf.x78zum5
 www.perplexity.ai##.w-sidebarPinnedWidth
 www.perplexity.ai##.gap-sm.items-center.flex-col.flex.bg-raised.divide-subtlest.ring-subtlest.border-subtlest.border.shadow-black\/\[0\.03\].shadow-xl.rounded-2xl.mb-md.md\:flex-row.w-full.relative.md\:gap-md.p-md.group
 www.facebook.com##.x1xmf6yo.xev17xk.xpilrb4.xso031l.x1lun4ml.x178xt8z.x1t7ytsu.x1q0q8m5.x18b5jzi.x13fuv20.x15x8krk.xde0f50.x5a5i1n.x1obq294.x1nmn18.x1nb4dca.xpv9jar.x1exxf4d
-
-||abs.twimg.com/responsive-web/client-web/Chirp
