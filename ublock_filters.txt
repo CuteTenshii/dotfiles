@@ -35,20 +35,34 @@ spclient.spotify.com/gabo-receiver-service/
 ||x.com/i/api/*/graphql/error_log.json
 ||proxsee.pscp.tv^
 ||abs.twimg.com/responsive-web/client-web/Chirp
+x.com##+js(trusted-replace-xhr-response, /AgeVerificationPrompt/g, , url:/TweetDetail|TweetResultByRestId|UserTweets|HomeTimeline|HomeLatestTimeline|SearchTimeline|UserMedia/)
 
 ! Discord
 ||discord.com/error-reporting-proxy/
 ||discord.com/api/v*/science
 ||discord.com/api/v*/beaker
 ||discord.com/api/v*/metrics/v*
-||client-metrics.discordapp.net
+||client-metrics.discordapp.net^
+
+! Apple
+||appleid.apple.com/appleauth/jslog
+||maps.apple.com/data/analyticsStatus
+||maps.apple.com/data/performanceAnalytics
+
+! Leboncoin (prevents sending the typing indicator, marking messages as read, and sending that you're online)
+||api.leboncoin.fr/messaging/proxy/api/*/hal/*/conversations/*/messages/*/read
+||api.leboncoin.fr/messaging/proxy/api/*/hal/*/conversations/*/realtime/typing
+||api.leboncoin.fr/api/presence/me/status
 
 ! Misc beacons / error reporting
 ||guns.lol/api/telemetry
 ||t.frozi.lol^
-||appleid.apple.com/appleauth/jslog
+||cdn.pendo.io^
+||reload.getsentry.net^
+||metrics.eneba.com^
+||google.com/maps/_/MapsWizUi/web-reports
 
-! ===== Broad generic patterns (apply to ALL sites) =====
+! Broad generic patterns (apply to ALL sites)
 /_v_script.js
 /cdn-cgi/trace
 
