@@ -85,4 +85,4 @@ Others keybinds are those by default.
   sudo udevadm control --reload-rules
   sudo udevadm trigger
   ```
-- Fix VMware Workstation closing when the mouse focuses the VM: install `libx11-mr293` [https://github.com/xkbcommon/libxkbcommon/issues/888#issuecomment-3478004721]
+- VMware Workstation closing when the mouse focuses the VM: fixed in libX11 1.8.13 ([MR 293](https://gitlab.freedesktop.org/xorg/lib/libx11/-/merge_requests/293), [libxkbcommon#888](https://github.com/xkbcommon/libxkbcommon/issues/888#issuecomment-3478004721)), so the `libx11-mr293` AUR package isn't needed anymore
