@@ -5,6 +5,25 @@ random scripts and stuff
 
 ## What's there?
 
+### `.agents`
+
+Stuff shared by my AI coding agents. `hooks/block-git-push-skip-hooks` stops them from running `git push --no-verify`, or skipping git hooks some other way, like `HUSKY=0` or `-c core.hooksPath=`. That way they can't get around the signed-commit check in `.config/git/hooks`.
+
+It's wired up for:
+
+- Codex: `.codex/hooks.json`. Codex skips new hooks until you trust them with `/hooks`.
+- Claude Code: its settings file isn't in this repo, so add this to `~/.claude/settings.json`:
+  ```json
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "\"$HOME/.agents/hooks/block-git-push-skip-hooks\"", "timeout": 10 }]
+      }
+    ]
+  }
+  ```
+
 ### `.config`
 
 Config files for my Arch Linux setup, which includes kitty, Hyprland, zsh, waybar.
@@ -54,6 +73,7 @@ Others keybinds are those by default.
 - Screenshots: `hyprshot`
 - Fonts: `apple-fonts`, `ttf-apple-emoji`, `ttf-hack-nerd`
 - Waybar icons: `otf-font-awesome`
+- Agent git push hook: `jq`
 
 ### Things to do
 
