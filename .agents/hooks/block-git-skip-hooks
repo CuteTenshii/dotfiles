@@ -1,5 +1,6 @@
 #!/usr/bin/env -S zsh -f
-# Agent PreToolUse hook: exits 2 with the reason on stderr when a command pushes without git hooks.
+# Agent PreToolUse hook: exits 2 with the reason on stderr when a git push, commit, merge or pull
+# skips git hooks.
 # Parsed with ${(z)} rather than grepped, so a commit message that mentions --no-verify passes.
 
 setopt extended_glob
@@ -8,6 +9,11 @@ readonly SEPARATORS=(';' ';;' '&' '&&' '|' '||' '|&' '&|' '&!' '(' ')' '{' '}' '
 readonly SHELLS=(sh bash zsh dash ksh fish)
 readonly PASSTHROUGH=(command builtin exec nohup time nice ionice sudo doas stdbuf)
 readonly GIT_OPTS_WITH_ARG=(-C -c --git-dir --work-tree --namespace --config-env --super-prefix --list-cmds)
+readonly HOOKED_SUBCOMMANDS=(push commit merge pull)
+# Values of these commit options are skipped so `-m "-n ..."` isn't read as -n.
+readonly COMMIT_SHORT_WITH_ARG='[mFcCt]'
+readonly COMMIT_LONG_WITH_ARG=(--message --file --reuse-message --reedit-message --template --author
+  --date --fixup --squash --cleanup --trailer --pathspec-from-file)
 
 unquote() {
   local word=${(Q)1}
@@ -19,6 +25,29 @@ unquote() {
 is_no_verify() {
   # git accepts unambiguous prefixes; "--no-ver" clashes with --no-verbose.
   (( ${#1} >= 9 )) && [[ --no-verify == ${1}* ]]
+}
+
+# Sets REPLY to the flag and j (from check_git) past its value; -n means --no-verify only for commit.
+commit_flag_skips_hooks() {
+  local arg=$1
+  if [[ $arg == -[^-]* ]]; then
+    local flags=${arg#-} k
+    for (( k = 1; k <= $#flags; k++ )); do
+      if [[ $flags[k] == n ]]; then REPLY="\`$arg\`"; return 0; fi
+      # -S and -u take an optional value that must be attached, so they also end the cluster.
+      if [[ $flags[k] == ${~COMMIT_SHORT_WITH_ARG} ]]; then
+        (( k == $#flags )) && (( j++ ))
+        return 1
+      fi
+      [[ $flags[k] == [Su] ]] && return 1
+    done
+  elif [[ $arg == --[^=]## ]]; then
+    local opt
+    for opt in $COMMIT_LONG_WITH_ARG; do
+      if [[ $opt == ${arg}* ]]; then (( j++ )); return 1; fi
+    done
+  fi
+  return 1
 }
 
 is_hook_config() {
@@ -39,7 +68,8 @@ env_bypasses_hooks() {
   esac
 }
 
-# Sets REPLY to the bypass found; reads `env` from check_segment via dynamic scoping.
+# Sets REPLY to the bypass found and blocked_subcommand to the git subcommand; reads `env` from
+# check_segment via dynamic scoping.
 check_git() {
   local -a args overrides
   local word
@@ -58,12 +88,17 @@ check_git() {
     esac
     (( i++ ))
   done
-  [[ $args[i] == push ]] || return 1
+  local subcommand=$args[i]
+  (( ${HOOKED_SUBCOMMANDS[(Ie)$subcommand]} )) || return 1
+  blocked_subcommand=$subcommand
 
-  local arg
-  for arg in "${(@)args[i+1,-1]}"; do
+  local -a rest=("${(@)args[i+1,-1]}")
+  local arg j
+  for (( j = 1; j <= $#rest; j++ )); do
+    arg=$rest[j]
     [[ $arg == -- ]] && break
     if is_no_verify $arg; then REPLY="\`$arg\`"; return 0; fi
+    [[ $subcommand == commit ]] && commit_flag_skips_hooks $arg && return 0
   done
   for arg in "${overrides[@]}"; do
     if is_hook_config $arg; then REPLY="\`-c $arg\`"; return 0; fi
@@ -157,12 +192,38 @@ check_segment() {
   fi
 }
 
+# Sets REPLY to $1 without heredoc bodies, which ${(z)} would otherwise read as words, so a commit
+# message fed through `<<EOF` that mentions --no-verify passes.
+strip_heredocs() {
+  local -a kept pending tokens
+  local line token
+  integer k
+  for line in "${(@f)1}"; do
+    if (( $#pending )); then
+      [[ $pending[1] == -* ]] && line=${line##$'\t'#}
+      [[ $line == ${pending[1]#-} ]] && shift pending
+      continue
+    fi
+    kept+=("$line")
+    tokens=("${(@z)line}")
+    for (( k = 1; k < $#tokens; k++ )); do
+      token=$tokens[k]
+      [[ $token == ('<<'|'<<-') ]] || continue
+      unquote $tokens[k+1]
+      # A leading - marks <<-, whose terminator may be indented with tabs.
+      pending+=("${token#'<<'}$REPLY")
+    done
+  done
+  REPLY=${(F)kept}
+}
+
 check_command() {
   (( ++depth <= 5 )) || return 1
   local -A exported=("${(@kv)exported}")
   local -a segment=()
   local word
-  for word in "${(@z)1}" ';'; do
+  strip_heredocs "$1"
+  for word in "${(@z)REPLY}" ';'; do
     if (( ${SEPARATORS[(Ie)$word]} )); then
       if (( $#segment )) && check_segment "${segment[@]}"; then
         (( depth-- ))
@@ -182,7 +243,8 @@ command=$(jq -r '.tool_input.command // empty | if type == "array" then map(@sh)
 
 typeset -A exported=()
 integer depth=0
+blocked_subcommand=
 check_command "$command" || exit 0
 
-print -u2 -r -- "Blocked: this \`git push\` skips git hooks via $REPLY. Pushing without running hooks is not allowed. Run a plain \`git push\` and fix whatever the pre-push hook reports instead of bypassing it."
+print -u2 -r -- "Blocked: this \`git $blocked_subcommand\` skips git hooks via $REPLY. Running git without its hooks is not allowed. Drop that and fix whatever the hook reports instead of bypassing it."
 exit 2

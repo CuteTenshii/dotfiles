@@ -7,7 +7,7 @@ random scripts and stuff
 
 ### `.agents`
 
-Stuff shared by my AI coding agents. `hooks/block-git-push-skip-hooks` stops them from running `git push --no-verify`, or skipping git hooks some other way, like `HUSKY=0` or `-c core.hooksPath=`. That way they can't get around the signed-commit check in `.config/git/hooks`.
+Stuff shared by my AI coding agents. `hooks/block-git-skip-hooks` stops them from running `git push`, `commit`, `merge` or `pull` with `--no-verify` (or `git commit -n`), or skipping git hooks some other way, like `HUSKY=0` or `-c core.hooksPath=`. That way they can't get around the signed-commit and Conventional Commits checks in `.config/git/hooks`.
 
 It's wired up for:
 
@@ -18,7 +18,7 @@ It's wired up for:
     "PreToolUse": [
       {
         "matcher": "Bash",
-        "hooks": [{ "type": "command", "command": "\"$HOME/.agents/hooks/block-git-push-skip-hooks\"", "timeout": 10 }]
+        "hooks": [{ "type": "command", "command": "\"$HOME/.agents/hooks/block-git-skip-hooks\"", "timeout": 10 }]
       }
     ]
   }

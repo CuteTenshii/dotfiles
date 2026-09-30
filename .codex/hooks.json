@@ -6,9 +6,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$HOME/.agents/hooks/block-git-push-skip-hooks\"",
+            "command": "\"$HOME/.agents/hooks/block-git-skip-hooks\"",
             "timeout": 10,
-            "statusMessage": "Checking git push for skipped hooks"
+            "statusMessage": "Checking git commands for skipped hooks"
           }
         ]
       }
