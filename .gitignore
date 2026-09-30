@@ -1,0 +1,2 @@
+# Tracked here despite the global .codex ignore, which targets per-project Codex state.
+!.codex/

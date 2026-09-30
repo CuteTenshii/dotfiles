@@ -1,0 +1,188 @@
+#!/usr/bin/env -S zsh -f
+# Agent PreToolUse hook: exits 2 with the reason on stderr when a command pushes without git hooks.
+# Parsed with ${(z)} rather than grepped, so a commit message that mentions --no-verify passes.
+
+setopt extended_glob
+
+readonly SEPARATORS=(';' ';;' '&' '&&' '|' '||' '|&' '&|' '&!' '(' ')' '{' '}' '!')
+readonly SHELLS=(sh bash zsh dash ksh fish)
+readonly PASSTHROUGH=(command builtin exec nohup time nice ionice sudo doas stdbuf)
+readonly GIT_OPTS_WITH_ARG=(-C -c --git-dir --work-tree --namespace --config-env --super-prefix --list-cmds)
+
+unquote() {
+  local word=${(Q)1}
+  # (Q) keeps an unterminated quote.
+  word=${word#[\"\']}
+  REPLY=${word%[\"\']}
+}
+
+is_no_verify() {
+  # git accepts unambiguous prefixes; "--no-ver" clashes with --no-verbose.
+  (( ${#1} >= 9 )) && [[ --no-verify == ${1}* ]]
+}
+
+is_hook_config() {
+  local key=${${1%%=*}:l}
+  [[ $key == core.hookspath || $key == hook.* ]]
+}
+
+env_bypasses_hooks() {
+  local name=$1 value=$2
+  case $name in
+    HUSKY) [[ $value == 0 ]] ;;
+    HUSKY_SKIP_HOOKS) [[ $value != (|0|false) ]] ;;
+    LEFTHOOK) [[ $value == (0|false) ]] ;;
+    LEFTHOOK_EXCLUDE|SKIP) [[ -n $value ]] ;;
+    GIT_CONFIG_PARAMETERS) [[ ${value:l} == *(core.hookspath|\'hook.)* ]] ;;
+    GIT_CONFIG_KEY_<->) is_hook_config $value ;;
+    *) return 1 ;;
+  esac
+}
+
+# Sets REPLY to the bypass found; reads `env` from check_segment via dynamic scoping.
+check_git() {
+  local -a args overrides
+  local word
+  for word in "$@"; do unquote $word; args+=("$REPLY"); done
+
+  local i=1
+  while (( i <= $#args )) && [[ $args[i] == -* ]]; do
+    if (( ${GIT_OPTS_WITH_ARG[(Ie)$args[i]]} )); then
+      [[ $args[i] == (-c|--config-env) ]] && overrides+=("$args[i+1]")
+      (( i += 2 ))
+      continue
+    fi
+    case $args[i] in
+      -c?*) overrides+=("${args[i]#-c}") ;;
+      --config-env=*) overrides+=("${args[i]#*=}") ;;
+    esac
+    (( i++ ))
+  done
+  [[ $args[i] == push ]] || return 1
+
+  local arg
+  for arg in "${(@)args[i+1,-1]}"; do
+    [[ $arg == -- ]] && break
+    if is_no_verify $arg; then REPLY="\`$arg\`"; return 0; fi
+  done
+  for arg in "${overrides[@]}"; do
+    if is_hook_config $arg; then REPLY="\`-c $arg\`"; return 0; fi
+  done
+  local name
+  for name in "${(@k)env}"; do
+    if env_bypasses_hooks $name "$env[$name]"; then
+      REPLY="\`$name=$env[$name]\`"
+      return 0
+    fi
+  done
+  return 1
+}
+
+check_segment() {
+  local -A env=("${(@kv)exported}")
+  local -a words=("$@")
+
+  if [[ $words[1] == (export|declare|typeset) ]]; then
+    local token
+    for token in "${(@)words[2,-1]}"; do
+      unquote $token
+      [[ $REPLY == [A-Za-z_][A-Za-z0-9_]#=* ]] && exported[${REPLY%%=*}]=${REPLY#*=}
+    done
+    return 1
+  fi
+
+  local token expandable
+  for token in "${words[@]}"; do
+    # Single-quoted $(...) is never executed.
+    expandable=${token//\'[^\']#\'/}
+    if [[ $expandable == *'$('*')'* ]]; then
+      check_command "${${expandable#*\$\(}%\)*}" && return 0
+    elif [[ $expandable == *'`'*'`'* ]]; then
+      check_command "${${expandable#*\`}%\`*}" && return 0
+    fi
+  done
+
+  local i=1
+  while (( i <= $#words )); do
+    unquote $words[i]
+    local word=$REPLY
+    if [[ $word == [A-Za-z_][A-Za-z0-9_]#=* ]]; then
+      env[${word%%=*}]=${word#*=}
+    elif [[ ${word:t} == env ]]; then
+      while (( i < $#words )); do
+        unquote $words[i+1]
+        if [[ $REPLY == [A-Za-z_][A-Za-z0-9_]#=* ]]; then
+          env[${REPLY%%=*}]=${REPLY#*=}
+        elif [[ $REPLY == (-u|--unset|-C|--chdir) ]]; then
+          (( i++ ))
+        elif [[ $REPLY != -* ]]; then
+          break
+        fi
+        (( i++ ))
+      done
+    elif (( ${PASSTHROUGH[(Ie)${word:t}]} )) || [[ ${word:t} == timeout ]]; then
+      local wrapper=${word:t}
+      while (( i < $#words )) && [[ $words[i+1] == -* ]]; do (( i++ )); done
+      [[ $wrapper == timeout ]] && (( i++ ))
+    else
+      break
+    fi
+    (( i++ ))
+  done
+  (( i <= $#words )) || return 1
+
+  unquote $words[i]
+  local name=${REPLY:t}
+  if [[ $name == git ]]; then
+    check_git "${(@)words[i+1,-1]}"
+  elif (( ${SHELLS[(Ie)$name]} )); then
+    local j
+    for (( j = i + 1; j < $#words; j++ )); do
+      unquote $words[j]
+      if [[ $REPLY == -[a-z]#c[a-z]# ]]; then
+        unquote $words[j+1]
+        local -A exported=("${(@kv)env}")
+        check_command "$REPLY"
+        return
+      fi
+    done
+    return 1
+  elif [[ $name == eval ]]; then
+    local -a rest=()
+    for token in "${(@)words[i+1,-1]}"; do unquote $token; rest+=("$REPLY"); done
+    local -A exported=("${(@kv)env}")
+    check_command "${(j: :)rest}"
+  else
+    return 1
+  fi
+}
+
+check_command() {
+  (( ++depth <= 5 )) || return 1
+  local -A exported=("${(@kv)exported}")
+  local -a segment=()
+  local word
+  for word in "${(@z)1}" ';'; do
+    if (( ${SEPARATORS[(Ie)$word]} )); then
+      if (( $#segment )) && check_segment "${segment[@]}"; then
+        (( depth-- ))
+        return 0
+      fi
+      segment=()
+    else
+      segment+=("$word")
+    fi
+  done
+  (( depth-- ))
+  return 1
+}
+
+command=$(jq -r '.tool_input.command // empty | if type == "array" then map(@sh) | join(" ") else . end' 2>/dev/null) || exit 0
+[[ $command == *git* ]] || exit 0
+
+typeset -A exported=()
+integer depth=0
+check_command "$command" || exit 0
+
+print -u2 -r -- "Blocked: this \`git push\` skips git hooks via $REPLY. Pushing without running hooks is not allowed. Run a plain \`git push\` and fix whatever the pre-push hook reports instead of bypassing it."
+exit 2
