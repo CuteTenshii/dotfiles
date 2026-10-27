@@ -244,7 +244,7 @@ hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("hyprshot -m region --freeze"))
 hl.bind(mainMod .. " + code:59", hl.dsp.exec_cmd(
-    'rofimoji -a copy --hidden-descriptions --selector-args="-theme ~/grid.rasi -kb-row-left Left -kb-row-right Right -kb-move-char-back Control+b -kb-move-char-forward Control+f"'
+    'rofimoji -a copy --hidden-descriptions --selector-args="-theme ~/.config/rofi/grid.rasi -kb-row-left Left -kb-row-right Right -kb-move-char-back Control+b -kb-move-char-forward Control+f"'
 ))
 
 -- Move focus with mainMod + arrow keys
@@ -337,5 +337,13 @@ hl.layer_rule({
 
     blur = true,
     -- Don't blur behind fully transparent pixels, so the bar's gaps stay clear
+    ignore_alpha = 0,
+})
+
+hl.layer_rule({
+    name  = "blur-rofi",
+    match = { namespace = "rofi" },
+
+    blur         = true,
     ignore_alpha = 0,
 })

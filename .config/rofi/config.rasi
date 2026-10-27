@@ -1,1 +1,15 @@
-@theme "/usr/share/rofi/themes/Arc-Dark.rasi"
+configuration {
+    modi:                "drun,run,window";
+    show-icons:          true;
+    icon-theme:          "breeze-dark";
+    drun-display-format: "{name}";
+    display-drun:        "Apps";
+    display-run:         "Run";
+    display-window:      "Windows";
+    display-dmenu:       "Pick";
+    matching:            "fuzzy";
+    sort:                true;
+    sorting-method:      "fzf";
+}
+
+@theme "~/.config/rofi/theme.rasi"

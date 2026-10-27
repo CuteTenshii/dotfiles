@@ -1,0 +1,26 @@
+@import "theme.rasi"
+
+window {
+    width: 560px;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+}
+
+listview {
+    columns: 8;
+    lines:   6;
+    flow:    horizontal;
+    spacing: 4px;
+}
+
+element {
+    padding:  6px 0;
+    children: [ element-text ];
+}
+
+element-text {
+    font:             "Apple Color Emoji 18";
+    horizontal-align: 0.5;
+}
