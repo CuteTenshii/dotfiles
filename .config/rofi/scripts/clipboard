@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Clipboard history picker: image entries get a thumbnail and a large preview, Delete removes an entry.
+# Run it without arguments; it starts rofi with itself as a script mode.
+set -euo pipefail
+
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/rofi"
+thumbs="${XDG_RUNTIME_DIR:-/tmp/$UID}/cliphist-thumbs"
+
+if [[ -z ${ROFI_RETV:-} ]]; then
+    exec rofi -show clipboard -modi "clipboard:$(realpath "$0")" -show-icons \
+        -theme "$config_dir/clipboard.rasi" \
+        -kb-remove-char-forward Control+d -kb-delete-entry Delete
+fi
+
+mkdir -p -m 700 "$thumbs"
+
+case $ROFI_RETV in
+    1)  # wl-copy forks to serve the clipboard; rofi waits until our stdout closes.
+        printf '%s\t\n' "$ROFI_INFO" | cliphist decode | wl-copy >/dev/null 2>&1
+        exit 0 ;;
+    3)  printf '%s\t\n' "$ROFI_INFO" | cliphist delete ;;
+esac
+
+history=$(cliphist list)
+
+declare -A live
+while IFS=$'\t' read -r id _; do live[$id]=1; done <<<"$history"
+for file in "$thumbs"/*; do
+    [[ -e $file ]] || continue
+    id=${file##*/}
+    [[ -v live[${id%.*}] ]] || rm -f -- "$file"
+done
+
+printf '\0prompt\x1fClipboard\n\0no-custom\x1ftrue\n\0keep-selection\x1ftrue\n\0keep-filter\x1ftrue\n'
+gawk -F'\t' -v dir="$thumbs" '
+    # Browsers store an HTML copy of every image they put on the clipboard.
+    $2 ~ /^<meta http-equiv=/ { next }
+    {
+        id = $1
+        text = substr($0, length(id) + 2)
+    }
+    match(text, /^\[\[ binary data ([0-9.]+ [KMG]?i?B) (png|jpe?g|bmp|gif|webp) ([0-9]+)x([0-9]+) \]\]$/, m) {
+        file = dir "/" id "." m[2]
+        if (system("test -s \"" file "\"") != 0) {
+            decode = "cliphist decode > \"" file "\""
+            print id "\t" | decode
+            close(decode)
+        }
+        printf "Image  %s × %s · %s · %s\0info\x1f%s\x1ficon\x1f%s\n", m[3], m[4], toupper(m[2]), m[1], id, file
+        next
+    }
+    { printf "%s\0info\x1f%s\n", text, id }
+' <<<"$history"

@@ -1,0 +1,38 @@
+@import "theme.rasi"
+
+window {
+    width: 960px;
+}
+
+mainbox {
+    children: [ inputbar, listview-split ];
+}
+
+listview-split {
+    orientation: horizontal;
+    children:    [ listview, icon-current-entry ];
+    spacing:     12px;
+}
+
+listview {
+    lines:        10;
+    fixed-height: true;
+}
+
+element-icon {
+    size: 24px;
+}
+
+element-text {
+    highlight: bold;
+}
+
+icon-current-entry {
+    expand:           false;
+    size:             400px;
+    background-color: @bg-input;
+    border-radius:    4px;
+    padding:          12px;
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+}
